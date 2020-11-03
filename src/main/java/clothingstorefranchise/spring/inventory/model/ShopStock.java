@@ -37,16 +37,16 @@ public class ShopStock {
 	@EmbeddedId
 	private ShopStockPK id;
 	
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = ProductSize.class)
-	@JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
-	@JoinColumn(name = "size_id", nullable = false, insertable = false, updatable = false)
-	private ProductSize productSize;
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Product.class)
+	@MapsId("product_id")
+    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
+	private Product product;
 	
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Shop.class)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Shop.class)
 	@MapsId("shop_id")
     @JoinColumn(name = "shop_id", nullable = false, insertable = false, updatable = false)
 	private Shop shop;
 	
 	@Column(nullable = false)
-	private int stock;
+	private Long stock;
 }

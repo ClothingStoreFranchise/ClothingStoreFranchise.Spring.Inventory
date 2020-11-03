@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -32,21 +33,29 @@ import lombok.ToString;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product {	
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @EqualsAndHashCode.Include
     @Column(insertable = true)
 	private Long id;
 	
+	@NotNull
 	@Column(nullable = false)
-	private float price;
+	private double unitPrice;
 	
+	@NotNull
 	@Column(nullable = false)
 	private String name;
 	
+	@NotNull
 	@Column(nullable = false)
 	private String pictureUrl;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
-	private Collection<ProductSize> stockSizes;
+	@NotNull
+	@Column(nullable = false)
+	private int clothingSizeType;
 	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+	private Collection<ShopStock> shopStock;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+	private Collection<WarehouseStock> warehouseStock;
 }

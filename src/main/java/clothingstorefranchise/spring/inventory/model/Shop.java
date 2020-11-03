@@ -33,7 +33,7 @@ import lombok.ToString;
 public class Shop {
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     @Column(insertable = true)
 	private Long id;
