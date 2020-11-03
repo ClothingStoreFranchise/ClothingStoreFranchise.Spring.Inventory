@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+import java.util.Arrays;
+
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
     protected final JwtConfiguration jwtConfiguration;
@@ -22,7 +24,21 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+                .cors().configurationSource(request -> {	
+                	CorsConfiguration cors = new CorsConfiguration();                 
+                    cors.setAllowedMethods(
+                      Arrays.asList( 
+                        HttpMethod.GET.name(),
+                        HttpMethod.POST.name(),
+                        HttpMethod.PUT.name(),
+                        HttpMethod.DELETE.name(),
+                        HttpMethod.PATCH.name(),
+                        HttpMethod.OPTIONS.name(),
+                        HttpMethod.PATCH.name()
+                   ));   
+                   cors.applyPermitDefaultValues();           
+                   return cors;   
+               })
                 .and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()

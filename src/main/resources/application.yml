@@ -41,9 +41,3 @@ spring:
 jwt:
   config:
     type: signed
-
-#rabbitmq:    
- #   exchange: event_bus
-  #  queue: inventory
-   # port: 15672
-    #hostname: localhost
