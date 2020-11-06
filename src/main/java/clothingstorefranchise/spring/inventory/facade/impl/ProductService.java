@@ -9,11 +9,12 @@ import clothingstorefranchise.spring.inventory.dtos.ProductDto;
 import clothingstorefranchise.spring.inventory.dtos.ProductInventoryDto;
 import clothingstorefranchise.spring.inventory.dtos.ShopWithStockDto;
 import clothingstorefranchise.spring.inventory.dtos.StockCountDto;
-import clothingstorefranchise.spring.inventory.dtos.StockDto;
 import clothingstorefranchise.spring.inventory.dtos.WarehouseWithStockDto;
 import clothingstorefranchise.spring.inventory.dtos.events.CreateProductEvent;
+import clothingstorefranchise.spring.inventory.dtos.events.UpdateProductEvent;
 import clothingstorefranchise.spring.inventory.facade.IProductService;
 import clothingstorefranchise.spring.inventory.facade.IShopService;
+import clothingstorefranchise.spring.inventory.facade.IShopStockService;
 import clothingstorefranchise.spring.inventory.facade.IWarehouseService;
 import clothingstorefranchise.spring.inventory.facade.IWarehouseStockService;
 import clothingstorefranchise.spring.inventory.model.Product;
@@ -30,8 +31,10 @@ public class ProductService extends BaseService<Product, Long, IProductRepositor
 	private IWarehouseService warehouseService;
 	
 	@Autowired
-	IWarehouseStockService warehouseStockService;
+	private IWarehouseStockService warehouseStockService;
 	
+	@Autowired
+	private IShopStockService shopStockService;
 	
 	@Autowired
 	public ProductService(IProductRepository productRepository) {
@@ -39,8 +42,11 @@ public class ProductService extends BaseService<Product, Long, IProductRepositor
 	}
 
 	public void create(CreateProductEvent event) {
-		Product product = map(event, Product.class);
-		repository.save(product);
+		super.createBase(event);
+	}
+	
+	public void update(UpdateProductEvent event) {
+		super.updateBase(event);
 	}
 	
 	public List<ProductDto> loadAll() {
@@ -70,4 +76,9 @@ public class ProductService extends BaseService<Product, Long, IProductRepositor
 		return product;
 	}
 	
+	public void deleteProduct(Long id) {
+		this.warehouseStockService.deleteByProductId(id);
+		this.shopStockService.deleteByProductId(id);
+		super.delete(id);
+	}
 }

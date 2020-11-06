@@ -77,4 +77,8 @@ public class WarehouseService extends BaseService<Warehouse, Long, IWarehouseRep
 		 
 		 return warehouses;
 	 }
+	 
+	void deleteByProductId(Long productId) {
+		this.warehouseStockService.deleteByProductId(productId);
+	}
 }

@@ -10,4 +10,7 @@ import clothingstorefranchise.spring.inventory.model.ShopStock;
 public interface IShopStockRepository  extends JpaRepository<ShopStock, Long>{
 	
 	List<ShopStock> findByShopId(Long id);
+	
+	@Query("DELETE FROM ShopStock s WHERE s.id.productId = ?1")
+	void deleteStockByProductId(Long productId);
 }

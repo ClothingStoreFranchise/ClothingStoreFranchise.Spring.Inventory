@@ -47,4 +47,8 @@ public class WarehouseStockService extends BaseService<WarehouseStock, Long, IWa
 		
 		return repository.countTotalProductStocks(productId);
 	}
+	
+	public void deleteByProductId(Long productId) {
+		repository.deleteStockByProductId(productId);
+	}
 }

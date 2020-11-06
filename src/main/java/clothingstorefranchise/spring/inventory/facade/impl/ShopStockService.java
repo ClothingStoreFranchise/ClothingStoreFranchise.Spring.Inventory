@@ -38,7 +38,6 @@ public class ShopStockService extends BaseService<ShopStock, Long, IShopStockRep
 //        this.modelMapper.addMappings(propertyMap);
 	}
 
-	@Override
 	public List<StockDto> findByShopId(Long id) {
 		List<ShopStock> shopStock = shopStockRepository.findByShopId(id);		
 		return mapList(shopStock, StockDto.class);
@@ -56,6 +55,10 @@ public class ShopStockService extends BaseService<ShopStock, Long, IShopStockRep
 		
 		List<ShopStock> shopStocksCreated = createAction(shopStocks);
 		return mapList(shopStocksCreated, StockDto.class);
+	}
+	
+	public void deleteByProductId(Long productId) {
+		repository.deleteStockByProductId(productId);
 	}
 	
 }

@@ -12,4 +12,6 @@ public interface IWarehouseStockService {
 	List<StockDto> addProductToWarehouse(ProductDto product,Long warehouseId);
 	
 	List<StockCountDto> countTotalProductStocks(Long productId);
+	
+	void deleteByProductId(Long productId);
 }
