@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import clothingstorefranchise.spring.inventory.dtos.events.CreateProductEvent;
+import clothingstorefranchise.spring.inventory.dtos.events.DeleteProductEvent;
+import clothingstorefranchise.spring.inventory.dtos.events.UpdateProductEvent;
 
 @Configuration
 public class RabbitMqConfig {
@@ -51,14 +53,19 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    Binding primaryBinding() {
+    Binding createProductEventBinding() {
         return BindingBuilder.bind(primaryQueue()).to(exchange()).with(CreateProductEvent.class.getSimpleName());
     }
     
-    /*@Bean
-    Binding secondaryBinding() {
-    	return BindingBuilder.bind(primaryQueue()).to(exchange()).with("abab");
-    }*/
+    @Bean
+    Binding deleteProductEventBinding() {
+        return BindingBuilder.bind(primaryQueue()).to(exchange()).with(DeleteProductEvent.class.getSimpleName());
+    }
+    
+    @Bean
+    Binding updateProductEventBinding() {
+        return BindingBuilder.bind(primaryQueue()).to(exchange()).with(UpdateProductEvent.class.getSimpleName());
+    }
 
     @Bean
     Binding parkingBinding() {
