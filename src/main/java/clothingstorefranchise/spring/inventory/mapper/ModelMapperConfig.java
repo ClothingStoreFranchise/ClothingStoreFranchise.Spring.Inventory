@@ -12,13 +12,10 @@ import clothingstorefranchise.spring.inventory.model.ShopStock;
 @Configuration
 public class ModelMapperConfig {
 	
-	
 	@Bean
     public ModelMapper modelMapper() {
 		var modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
         return modelMapper;
 	}
-	
-	
 }

@@ -1,5 +1,6 @@
 package clothingstorefranchise.spring.inventory.facade.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class ProductService extends BaseService<Product, Long, IProductRepositor
 	public ProductInventoryDto loadProductStock(Long productId) {
 		List<ShopWithStockDto> shopDtos = shopService.findShopsWithStocksByProductId(productId);
 		List<WarehouseWithStockDto> warehouseDtos = warehouseService.findWarehousesWithStocksByProductId(productId);
-		List<StockCountDto> totalWarehouseStock = warehouseStockService.countTotalProductStocks(productId);
+		List<StockCountDto> totalWarehouseStock = warehouseStockService.countTotalProductStocks(Arrays.asList(productId));
 		
 		return ProductInventoryDto.builder().shops(shopDtos).warehouses(warehouseDtos).totalWarehouseStock(totalWarehouseStock).build();
 	}
@@ -70,13 +71,14 @@ public class ProductService extends BaseService<Product, Long, IProductRepositor
 	public ProductInventoryDto loadProductStockWithoutWarehouse(Long productId) {
 		ProductInventoryDto product = map(this.loadBase(productId), ProductInventoryDto.class);
 		List<ShopWithStockDto> shopDtos = shopService.findShopsWithStocksByProductId(productId);
-		List<StockCountDto> totalWarehouseStock = warehouseStockService.countTotalProductStocks(productId);
+		List<StockCountDto> totalWarehouseStock = warehouseStockService.countTotalProductStocks(Arrays.asList(productId));
 		product.setShops(shopDtos);
 		product.setTotalWarehouseStock(totalWarehouseStock);
 		return product;
 	}
 	
 	public void deleteProduct(Long id) {
+		//be careful with composite key 
 		this.warehouseStockService.deleteByProductId(id);
 		this.shopStockService.deleteByProductId(id);
 		super.delete(id);

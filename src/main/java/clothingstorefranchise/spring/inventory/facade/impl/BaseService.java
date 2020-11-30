@@ -55,7 +55,7 @@ public abstract class BaseService
 	
 	public <TEntityDto extends IEntityDto<TId>> TEntity updateBase(TEntityDto entityDto) {
 		
-		TEntity entity = repository.getOne(entityDto.key());
+		TEntity entity=loadBase(entityDto.key());
 		map(entityDto, entity);
 		return repository.save(entity);
 	}

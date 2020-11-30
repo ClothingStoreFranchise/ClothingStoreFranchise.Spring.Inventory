@@ -34,7 +34,8 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                         HttpMethod.DELETE.name(),
                         HttpMethod.PATCH.name(),
                         HttpMethod.OPTIONS.name(),
-                        HttpMethod.PATCH.name()
+                        HttpMethod.PATCH.name(),
+                        HttpMethod.HEAD.name()
                    ));   
                    cors.applyPermitDefaultValues();           
                    return cors;   
@@ -48,7 +49,9 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(jwtConfiguration.getLoginUrl(), "/**/swagger-ui.html").permitAll()
                 .antMatchers(HttpMethod.GET, "/**/swagger-resources/**", "/**/webjars/springfox-swagger-ui/**", "/**/v2/api-docs/**").permitAll()
                 //.antMatchers("/auth/user/**").hasRole(Rol.ADMIN)
-                .antMatchers("/auth/user/**").hasAnyRole(Rol.CUSTOMER,Rol.ADMIN)
+                .antMatchers("/warehouses/**").permitAll()
+                .antMatchers("/products/**/").permitAll()
+                .antMatchers("/products/**/stocks-without-warehouses").permitAll()
                 .anyRequest().authenticated();
     }
 }

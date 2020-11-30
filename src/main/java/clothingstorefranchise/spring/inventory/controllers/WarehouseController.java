@@ -45,17 +45,18 @@ public class WarehouseController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable Long id) {
 		warehouseService.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@GetMapping("/without_product/{productId}")
-	public ResponseEntity<List<WarehouseDto>> loadNotIn(@PathVariable Long productId){
+	public ResponseEntity<List<WarehouseDto>> loadWarehousesWithoutProductStock(@PathVariable Long productId){
 		return ResponseEntity.ok(warehouseService.findWarehouseWithoutProductStock(productId));
 	}
 	
 	@PutMapping("/product-allocation/{productId}") 
-	public ResponseEntity<List<WarehouseWithStockDto>> addProductToShops(@PathVariable Long productId, @RequestBody Long[] warehouseIds){
+	public ResponseEntity<List<WarehouseWithStockDto>> addProductToWarehouses(@PathVariable Long productId, @RequestBody Long[] warehouseIds){
 		return ResponseEntity.ok(warehouseService.addProductToWarehouses(productId, warehouseIds));
 	}
 }

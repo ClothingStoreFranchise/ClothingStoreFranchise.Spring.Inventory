@@ -52,7 +52,7 @@ public class IntegrationEventLog {
     	Gson gson = new Gson();
     	
 		this.eventId = event.getEventId();
-		this.content = gson.toJson(event);
+		this.content = gson.toJson(event);		
 		this.creationTime = LocalDateTime.parse(event.getCreationDate(), DateTimeFormatter.ISO_DATE_TIME);
 		this.state = EventState.NO_PUBLISHED;
 		this.timesSent = 0;

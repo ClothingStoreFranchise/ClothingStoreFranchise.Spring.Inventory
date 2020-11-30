@@ -11,9 +11,12 @@ import clothingstorefranchise.spring.inventory.definitions.consts.ClothingSizes;
 import clothingstorefranchise.spring.inventory.dtos.ProductDto;
 import clothingstorefranchise.spring.inventory.dtos.StockDto;
 import clothingstorefranchise.spring.inventory.facade.IShopStockService;
+import clothingstorefranchise.spring.inventory.model.Product;
 import clothingstorefranchise.spring.inventory.model.ShopStock;
 import clothingstorefranchise.spring.inventory.model.ShopStockPK;
+import clothingstorefranchise.spring.inventory.repositories.IProductRepository;
 import clothingstorefranchise.spring.inventory.repositories.IShopStockRepository;
+import clothingstorefranchise.spring.inventory.repositories.IWarehouseRepository;
 
 @Service
 public class ShopStockService extends BaseService<ShopStock, Long, IShopStockRepository>
@@ -21,21 +24,13 @@ public class ShopStockService extends BaseService<ShopStock, Long, IShopStockRep
 	
 	private IShopStockRepository shopStockRepository;
 	
-	/*private PropertyMap<ShopStock, StockDto> propertyMap = new PropertyMap<ShopStock, StockDto>() {
-		  protected void configure() {
-			    map().setProductId(source.getProduct().getId());
-			    map().setShopId(source.getShop().getId());
-			    map().setSize(source.getId().getSize());
-			  }
-			};
-		*/	
-	@Autowired
-	public ShopStockService(IShopStockRepository shopStockRepository) {
-		super(ShopStock.class, shopStockRepository);
-		this.shopStockRepository = shopStockRepository;		
-		//modelMapper.addMappings(propertyMap);
+	private IProductRepository productRepository;
 
-//        this.modelMapper.addMappings(propertyMap);
+	@Autowired
+	public ShopStockService(IShopStockRepository shopStockRepository, IProductRepository productRepository) {
+		super(ShopStock.class, shopStockRepository);
+		this.shopStockRepository = shopStockRepository;
+		this.productRepository = productRepository;
 	}
 
 	public List<StockDto> findByShopId(Long id) {
@@ -43,8 +38,9 @@ public class ShopStockService extends BaseService<ShopStock, Long, IShopStockRep
 		return mapList(shopStock, StockDto.class);
 	}
 	
-	public List<StockDto> addProductToShop(ProductDto product, Long shopId) {
+	public List<StockDto> addProductToShop(Long productId, Long shopId) {
 		
+		Product product = productRepository.findById(productId).get();
 		int[] sizes = ClothingSizes.getClothingShizes(product.getClothingSizeType());
 		List<ShopStock> shopStocks = new ArrayList<>();
 		

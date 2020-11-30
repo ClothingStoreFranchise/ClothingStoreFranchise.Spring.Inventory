@@ -53,9 +53,9 @@ public class Product {
 	@Column(nullable = false)
 	private int clothingSizeType;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Collection<ShopStock> shopStock;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Collection<WarehouseStock> warehouseStock;
 }

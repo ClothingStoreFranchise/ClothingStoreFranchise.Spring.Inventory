@@ -46,7 +46,4 @@ public class Shop {
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "shop")
 	private Collection<ShopStock> shopStocks;
-	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Collection<Employee> employees;  
 }

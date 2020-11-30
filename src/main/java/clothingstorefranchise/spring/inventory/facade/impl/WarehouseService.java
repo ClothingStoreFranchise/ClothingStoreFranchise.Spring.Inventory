@@ -1,17 +1,21 @@
 package clothingstorefranchise.spring.inventory.facade.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import clothingstorefranchise.spring.inventory.dtos.ProductDto;
+import clothingstorefranchise.spring.inventory.RabbitMqConfig;
+import clothingstorefranchise.spring.inventory.dtos.StockCountDto;
 import clothingstorefranchise.spring.inventory.dtos.StockDto;
 import clothingstorefranchise.spring.inventory.dtos.WarehouseDto;
 import clothingstorefranchise.spring.inventory.dtos.WarehouseWithStockDto;
-import clothingstorefranchise.spring.inventory.facade.IProductService;
+import clothingstorefranchise.spring.inventory.dtos.events.CreateWarehouseEvent;
+import clothingstorefranchise.spring.inventory.dtos.events.UpdateStockEvent;
+import clothingstorefranchise.spring.inventory.dtos.events.UpdateWarehouseEvent;
 import clothingstorefranchise.spring.inventory.facade.IWarehouseService;
 import clothingstorefranchise.spring.inventory.facade.IWarehouseStockService;
 import clothingstorefranchise.spring.inventory.model.Warehouse;
@@ -25,7 +29,7 @@ public class WarehouseService extends BaseService<Warehouse, Long, IWarehouseRep
 	IWarehouseStockService warehouseStockService;
 	
 	@Autowired
-	private IProductService productService;
+	private RabbitTemplate rabbitTemplate;
 		
 	@Autowired
 	public WarehouseService(IWarehouseRepository warehouseRepository) {
@@ -39,6 +43,9 @@ public class WarehouseService extends BaseService<Warehouse, Long, IWarehouseRep
 
 	public WarehouseDto create(WarehouseDto warehouseDto) {
 		Warehouse warehouse = super.createBase(warehouseDto);
+		CreateWarehouseEvent event = map(warehouse, CreateWarehouseEvent.class);
+		rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, CreateWarehouseEvent.class.getSimpleName(), event);
+		
 		return map(warehouse, WarehouseDto.class);
 	}
 
@@ -54,6 +61,10 @@ public class WarehouseService extends BaseService<Warehouse, Long, IWarehouseRep
 
 	public WarehouseDto update(WarehouseDto warehouseDto) {
 		Warehouse warehouse = super.updateBase(warehouseDto);
+		UpdateWarehouseEvent event = map(warehouse, UpdateWarehouseEvent.class);
+		
+		rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, UpdateWarehouseEvent.class.getSimpleName(), event);
+		
 		return map(warehouse, WarehouseDto.class);
 	}
 	
@@ -65,17 +76,22 @@ public class WarehouseService extends BaseService<Warehouse, Long, IWarehouseRep
 	 public List<WarehouseWithStockDto> addProductToWarehouses(Long productId, Long[] warehouseIds){
 		 
 		 List<WarehouseWithStockDto> warehouses = new ArrayList<>();
-		 ProductDto product = productService.load(productId);
 		 
 		 for(Long id : warehouseIds) {
-			 List<StockDto> stock = this.warehouseStockService.addProductToWarehouse(product, id);
-			 WarehouseWithStockDto warehouse = map(this.load(id), WarehouseWithStockDto.class);
+			 List<StockDto> stock = this.warehouseStockService.addProductToWarehouse(productId, id);
+			 WarehouseDto warehouseDto = this.load(id);
+			 WarehouseWithStockDto warehouse = map(warehouseDto, WarehouseWithStockDto.class);
 			 warehouse.setWarehouseStocks(stock);
 			 
 			 warehouses.add(warehouse);
 		 }
 		 
-		 return warehouses;
+		//update data in other micorservices
+		List<StockCountDto> totalWarehouseStock = warehouseStockService.countTotalProductStocks(Arrays.asList(productId));
+		UpdateStockEvent event = new UpdateStockEvent(totalWarehouseStock);
+		rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, UpdateStockEvent.class.getSimpleName(), event);
+		
+		return warehouses;
 	 }
 	 
 	void deleteByProductId(Long productId) {
