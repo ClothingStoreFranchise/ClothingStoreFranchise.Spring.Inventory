@@ -4,8 +4,6 @@ import java.util.Collection;
 
 import clothingstorefranchise.spring.common.extensible.AbstractExtensibleEntityDto;
 import clothingstorefranchise.spring.common.types.IEntityDto;
-import clothingstorefranchise.spring.inventory.model.Employee;
-import clothingstorefranchise.spring.inventory.model.ShopStock;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +20,6 @@ public class ShopDto extends AbstractExtensibleEntityDto implements IEntityDto<L
 	
 	private String phone;
 		
-	
-	//private Collection<Employee> employees;
-
 	@Override
 	public Long key() {
 		return id;

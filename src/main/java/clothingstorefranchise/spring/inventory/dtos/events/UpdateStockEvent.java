@@ -1,24 +1,22 @@
 package clothingstorefranchise.spring.inventory.dtos.events;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
+import clothingstorefranchise.spring.common.event.IntegrationEvent;
+import clothingstorefranchise.spring.inventory.dtos.StockCountDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class UpdateStockEvent {
+public class UpdateStockEvent extends IntegrationEvent {
 	
-	@JsonProperty("ProductId")
-	private Long productId;
+	@JsonProperty("Stocks")
+	private List<StockCountDto> totalWarehouseStock;
 	
-	@JsonProperty("Size")
-	private int idSize;
-	
-	@JsonProperty("Stock")
-	private Long stock;
+	public UpdateStockEvent(List<StockCountDto> totalWarehouseStock) {
+		this.totalWarehouseStock = totalWarehouseStock;
+	}
 }

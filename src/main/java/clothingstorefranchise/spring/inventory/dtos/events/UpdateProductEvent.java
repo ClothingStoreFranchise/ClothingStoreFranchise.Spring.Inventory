@@ -29,9 +29,6 @@ public class UpdateProductEvent extends IntegrationEvent implements IEntityDto<L
 	@JsonProperty("ClothingSizeType")
 	private int clothingSizeType;
 	
-	@JsonProperty("Ab")
-	private int ab;
-	
 	@Override
 	public Long key() {
 		return id;

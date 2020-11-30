@@ -4,12 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import clothingstorefranchise.spring.common.event.IIntegrationEventHandler;
 import clothingstorefranchise.spring.inventory.RabbitMqConfig;
 import clothingstorefranchise.spring.inventory.dtos.events.UpdateProductEvent;
 import clothingstorefranchise.spring.inventory.facade.IProductService;
 
+@Service
 public class ProductUpdatedHandler implements IIntegrationEventHandler<UpdateProductEvent> {
 	private final Logger logger = LoggerFactory.getLogger(ProductUpdatedHandler.class);
 
@@ -17,10 +22,10 @@ public class ProductUpdatedHandler implements IIntegrationEventHandler<UpdatePro
 	private IProductService productService;
 	
 	@Override
-	@RabbitListener(queues = RabbitMqConfig.QUEUE)
+	@Async
+    @EventListener
 	public void handle(UpdateProductEvent event) {	
 		logger.info("UpdateProductEvent received");
-		
 		productService.update(event);
 	}
 }

@@ -8,14 +8,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StockCountDto {
+	
+	@JsonProperty("productId")
+	private Long idProduct;
     
-	@JsonProperty("Size")
+	@JsonProperty("size")
 	private int idSize;
 	
-	@JsonProperty("Stock")
 	private Long stock;
 	
-	public StockCountDto(int idSize, Long stock) {
+	public StockCountDto(Long productId, int idSize, Long stock) {
+		this.idProduct = productId;
 		this.idSize = idSize;
 		this.stock = stock;
 	}
