@@ -10,14 +10,18 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import clothingstorefranchise.spring.common.event.EventBusSubscriptions;
 import clothingstorefranchise.spring.inventory.dtos.events.CreateProductEvent;
 import clothingstorefranchise.spring.inventory.dtos.events.DeleteProductEvent;
 import clothingstorefranchise.spring.inventory.dtos.events.UpdateProductEvent;
 
 @Configuration
+@ComponentScan(value = "clothingstorefranchise.spring.common.event")
 public class RabbitMqConfig {
 	
 	public static final String DEAD_LETTER_EXCHANGE = "dead_letter";
@@ -27,7 +31,9 @@ public class RabbitMqConfig {
 	public static final String QUEUE = "inventory";
 
     private static final String PARKINGLOT_QUEUE = QUEUE + ".parkingLot";
-
+    
+    @Autowired
+    private EventBusSubscriptions subscriptions;
     
     @Bean
 	DirectExchange deadLetterExchange() {
@@ -54,16 +60,19 @@ public class RabbitMqConfig {
 
     @Bean
     Binding createProductEventBinding() {
+    	subscriptions.addSubscription(CreateProductEvent.class);
         return BindingBuilder.bind(primaryQueue()).to(exchange()).with(CreateProductEvent.class.getSimpleName());
     }
     
     @Bean
     Binding deleteProductEventBinding() {
+    	subscriptions.addSubscription(DeleteProductEvent.class);
         return BindingBuilder.bind(primaryQueue()).to(exchange()).with(DeleteProductEvent.class.getSimpleName());
     }
     
     @Bean
     Binding updateProductEventBinding() {
+    	subscriptions.addSubscription(UpdateProductEvent.class);
         return BindingBuilder.bind(primaryQueue()).to(exchange()).with(UpdateProductEvent.class.getSimpleName());
     }
 
