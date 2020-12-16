@@ -1,5 +1,7 @@
 package clothingstorefranchise.spring.inventory.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import clothingstorefranchise.spring.common.extensible.AbstractExtensibleEntityDto;
 import clothingstorefranchise.spring.common.types.IEntityDto;
 import lombok.AllArgsConstructor;
@@ -18,7 +20,8 @@ public class StockDto extends AbstractExtensibleEntityDto implements IEntityDto<
     private Long warehouseId;
     
     private ProductDto product;
-    	
+    
+    @JsonProperty("size")
 	private int idSize;
 	
 	private Long stock;

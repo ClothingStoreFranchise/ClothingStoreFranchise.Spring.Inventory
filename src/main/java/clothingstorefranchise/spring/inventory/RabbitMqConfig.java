@@ -19,6 +19,7 @@ import clothingstorefranchise.spring.common.event.EventBusSubscriptions;
 import clothingstorefranchise.spring.inventory.dtos.events.CreateProductEvent;
 import clothingstorefranchise.spring.inventory.dtos.events.DeleteProductEvent;
 import clothingstorefranchise.spring.inventory.dtos.events.UpdateProductEvent;
+import clothingstorefranchise.spring.inventory.dtos.events.ValidateInventoryEvent;
 
 @Configuration
 @ComponentScan(value = "clothingstorefranchise.spring.common.event")
@@ -29,6 +30,8 @@ public class RabbitMqConfig {
     public static final String EXCHANGE_NAME = "event_bus";
     
 	public static final String QUEUE = "inventory";
+	
+	public static final String QUEUE_REQUEST = "inventory_requests";
 
     private static final String PARKINGLOT_QUEUE = QUEUE + ".parkingLot";
     
@@ -52,6 +55,11 @@ public class RabbitMqConfig {
             .deadLetterRoutingKey(PARKINGLOT_QUEUE)
             .build();
     }
+    
+    @Bean
+    public Queue queueRequest() {
+        return new Queue(QUEUE_REQUEST);
+    }
 
     @Bean
     Queue parkinglotQueue() {
@@ -74,6 +82,13 @@ public class RabbitMqConfig {
     Binding updateProductEventBinding() {
     	subscriptions.addSubscription(UpdateProductEvent.class);
         return BindingBuilder.bind(primaryQueue()).to(exchange()).with(UpdateProductEvent.class.getSimpleName());
+    }
+    
+    @Bean
+    public Binding bindingRequest() {
+        return BindingBuilder.bind(queueRequest())
+                .to(exchange())
+                .with(ValidateInventoryEvent.class.getSimpleName());
     }
 
     @Bean

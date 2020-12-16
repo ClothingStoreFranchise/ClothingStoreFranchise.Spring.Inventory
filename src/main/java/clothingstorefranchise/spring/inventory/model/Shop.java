@@ -44,6 +44,6 @@ public class Shop {
 	@Column(nullable = false)
 	private String phone;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "shop")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "shop")
 	private Collection<ShopStock> shopStocks;
 }

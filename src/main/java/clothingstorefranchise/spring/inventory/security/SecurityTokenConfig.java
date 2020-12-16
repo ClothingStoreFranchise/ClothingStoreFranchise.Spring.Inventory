@@ -52,6 +52,8 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/warehouses/**").permitAll()
                 .antMatchers("/products/**/").permitAll()
                 .antMatchers("/products/**/stocks-without-warehouses").permitAll()
+                .antMatchers("/warehouse-stocks/**").permitAll()
+                .antMatchers("/shop-stocks/**").permitAll()
                 .anyRequest().authenticated();
     }
 }

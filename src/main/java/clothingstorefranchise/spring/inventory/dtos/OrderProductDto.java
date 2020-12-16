@@ -1,8 +1,5 @@
 package clothingstorefranchise.spring.inventory.dtos;
 
-import java.util.Collection;
-
-import clothingstorefranchise.spring.common.extensible.AbstractExtensibleEntityDto;
 import clothingstorefranchise.spring.common.types.IEntityDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,15 +10,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShopDto implements IEntityDto<Long> {
+public class OrderProductDto implements IEntityDto<Long> {
+	
 	private Long id;
 	
-	private String address;
+	private Long productId;
 	
-	private String phone;
-		
+	private int size;
+
+	private Long quantity;
+	
+	private int state;
+	
+	private Long warehouseId;
+
 	@Override
 	public Long key() {
-		return id;
+		return productId;
 	}
 }

@@ -23,10 +23,10 @@ public class InventoryListener implements MessageListener {
 	
 	@Autowired
     private EventBusSubscriptions subscriptions;
-	
+
 	@RabbitListener(queues = RabbitMqConfig.QUEUE)
 	public void onMessage(Message message) {
-
+		
 		String eventName = message.getMessageProperties().getReceivedRoutingKey();
 		Class<?> eventType = subscriptions.getEventType(eventName);
 		String event = new String(message.getBody(), StandardCharsets.UTF_8);
