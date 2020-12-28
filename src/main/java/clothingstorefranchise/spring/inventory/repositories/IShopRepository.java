@@ -14,6 +14,6 @@ public interface IShopRepository extends JpaRepository<Shop, Long> {
 	
 	List<Shop> findByIdNotIn(List<Long> ids);
 	
-	@Query("select distinct s from Shop s where s.id not in (select t.id.shopId from ShopStock t where t.id.productId = ?1)")
+	@Query("select distinct s from Shop s where s.id not in (select t.id.buildingId from ShopStock t where t.id.productId = ?1)")
 	List<Shop> findShopsNotMatchProductId(Long productId);
 }

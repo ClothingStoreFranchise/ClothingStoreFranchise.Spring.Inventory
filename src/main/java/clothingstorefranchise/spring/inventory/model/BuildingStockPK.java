@@ -24,13 +24,15 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ShopStockPK implements Serializable{
-		
+public class BuildingStockPK  implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = "product_id")
     protected Long productId;
 	
-	@Column(name = "shop_id")
-    protected Long shopId;
+	@Column(name = "building_id")
+    protected Long buildingId;
 	
 	@Column
 	protected int size;

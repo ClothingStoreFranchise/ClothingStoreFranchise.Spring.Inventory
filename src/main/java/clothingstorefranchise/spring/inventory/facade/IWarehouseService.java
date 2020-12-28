@@ -2,6 +2,7 @@ package clothingstorefranchise.spring.inventory.facade;
 
 import java.util.List;
 
+import clothingstorefranchise.spring.inventory.dtos.ProductInventoryDto;
 import clothingstorefranchise.spring.inventory.dtos.WarehouseDto;
 import clothingstorefranchise.spring.inventory.dtos.WarehouseWithStockDto;
 
@@ -11,7 +12,7 @@ public interface IWarehouseService {
 	
 	List<WarehouseDto> loadAll();
 	
-	WarehouseDto load(Long id);
+	WarehouseWithStockDto load(Long id);
 	
 	WarehouseDto update(WarehouseDto warehouseDto);
 	
@@ -21,5 +22,5 @@ public interface IWarehouseService {
 	
 	List<WarehouseDto> findWarehouseWithoutProductStock(Long productId);
 	
-	List<WarehouseWithStockDto> addProductToWarehouses(Long productId, Long[] warehouseIds);
+	ProductInventoryDto addProductToWarehouses(Long productId, Long[] warehouseIds);
 }

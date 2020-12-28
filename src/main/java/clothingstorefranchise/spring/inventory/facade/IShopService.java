@@ -10,7 +10,7 @@ public interface IShopService {
 	
 	List<ShopDto> loadAll();
 	
-	ShopDto load(Long id);
+	ShopWithStockDto load(Long id);
 	
 	ShopDto update(ShopDto shopDto);
 	

@@ -13,5 +13,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WarehouseWithStockDto extends WarehouseDto {
 	
-	private List<StockDto> warehouseStocks;
+	private List<StockDto> warehouseStocks;	
 }

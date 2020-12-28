@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import clothingstorefranchise.spring.inventory.RabbitMqConfig;
+import clothingstorefranchise.spring.inventory.dtos.ProductInventoryDto;
 import clothingstorefranchise.spring.inventory.dtos.StockCountDto;
 import clothingstorefranchise.spring.inventory.dtos.StockDto;
 import clothingstorefranchise.spring.inventory.dtos.WarehouseDto;
@@ -54,9 +55,9 @@ public class WarehouseService extends BaseService<Warehouse, Long, IWarehouseRep
 		return mapList(warehouses, WarehouseDto.class);
 	}
 
-	public WarehouseDto load(Long id) {
+	public WarehouseWithStockDto load(Long id) {
 		Warehouse warehouse = super.loadBase(id);
-		return map(warehouse, WarehouseDto.class);
+		return map(warehouse, WarehouseWithStockDto.class);
 	}
 
 	public WarehouseDto update(WarehouseDto warehouseDto) {
@@ -73,7 +74,7 @@ public class WarehouseService extends BaseService<Warehouse, Long, IWarehouseRep
 		return mapList(warehouse, WarehouseDto.class);
 	}
 	
-	 public List<WarehouseWithStockDto> addProductToWarehouses(Long productId, Long[] warehouseIds){
+	 public ProductInventoryDto addProductToWarehouses(Long productId, Long[] warehouseIds){
 		 
 		 List<WarehouseWithStockDto> warehouses = new ArrayList<>();
 		 
@@ -91,7 +92,8 @@ public class WarehouseService extends BaseService<Warehouse, Long, IWarehouseRep
 		UpdateStockEvent event = new UpdateStockEvent(totalWarehouseStock);
 		rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, UpdateStockEvent.class.getSimpleName(), event);
 		
-		return warehouses;
+		ProductInventoryDto productInventory = ProductInventoryDto.builder().warehouses(warehouses).totalWarehouseStock(totalWarehouseStock).build();
+		return productInventory;
 	 }
 	 
 	void deleteByProductId(Long productId) {

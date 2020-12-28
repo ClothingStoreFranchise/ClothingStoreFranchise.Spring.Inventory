@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import clothingstorefranchise.spring.inventory.dtos.ProductInventoryDto;
 import clothingstorefranchise.spring.inventory.dtos.ShopDto;
 import clothingstorefranchise.spring.inventory.dtos.WarehouseDto;
 import clothingstorefranchise.spring.inventory.dtos.WarehouseWithStockDto;
@@ -39,6 +40,11 @@ public class WarehouseController {
 		return ResponseEntity.ok(warehouseService.loadAll());
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<WarehouseWithStockDto> load(@PathVariable Long id){
+		return ResponseEntity.ok(warehouseService.load(id));
+	}
+	
 	@PutMapping
 	public ResponseEntity<WarehouseDto> update(@Valid @RequestBody WarehouseDto warehouseDto){
 		return ResponseEntity.ok(warehouseService.update(warehouseDto));
@@ -56,7 +62,7 @@ public class WarehouseController {
 	}
 	
 	@PutMapping("/product-allocation/{productId}") 
-	public ResponseEntity<List<WarehouseWithStockDto>> addProductToWarehouses(@PathVariable Long productId, @RequestBody Long[] warehouseIds){
+	public ResponseEntity<ProductInventoryDto> addProductToWarehouses(@PathVariable Long productId, @RequestBody Long[] warehouseIds){
 		return ResponseEntity.ok(warehouseService.addProductToWarehouses(productId, warehouseIds));
 	}
 }

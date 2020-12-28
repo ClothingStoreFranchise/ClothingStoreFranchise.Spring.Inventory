@@ -16,9 +16,9 @@ import clothingstorefranchise.spring.inventory.dtos.StockDto;
 import clothingstorefranchise.spring.inventory.dtos.events.UpdateStockEvent;
 import clothingstorefranchise.spring.inventory.dtos.events.ValidateInventoryEvent;
 import clothingstorefranchise.spring.inventory.facade.IWarehouseStockService;
+import clothingstorefranchise.spring.inventory.model.BuildingStockPK;
 import clothingstorefranchise.spring.inventory.model.Product;
 import clothingstorefranchise.spring.inventory.model.WarehouseStock;
-import clothingstorefranchise.spring.inventory.model.WarehouseStockPK;
 import clothingstorefranchise.spring.inventory.repositories.IProductRepository;
 import clothingstorefranchise.spring.inventory.repositories.IWarehouseStockRepository;
 
@@ -37,11 +37,6 @@ public class WarehouseStockService extends BaseService<WarehouseStock, Long, IWa
 		super(WarehouseStock.class, warehouseStockRepository);
 	}
 	
-	public List<StockDto> findByWarehouseId(Long id) {
-		List<WarehouseStock> entities = repository.findByWarehouseIdOrderByIdSizeAscQuery(id);
-		return mapList(entities, StockDto.class);
-	}
-	
 	public List<StockDto> addProductToWarehouse(Long productId,Long warehouseId) {
 		
 		Product product = productRepository.findById(productId).get();
@@ -49,7 +44,7 @@ public class WarehouseStockService extends BaseService<WarehouseStock, Long, IWa
 		List<WarehouseStock> warehouseStocks = new ArrayList<>();
 		
 		for(int i = 0; i<sizes.length; i++) {
-			WarehouseStockPK pk = WarehouseStockPK.builder().warehouseId(warehouseId).productId(productId).size(sizes[i]).build();
+			BuildingStockPK pk = BuildingStockPK.builder().buildingId(warehouseId).productId(productId).size(sizes[i]).build();
 			warehouseStocks.add(WarehouseStock.builder().id(pk).stock(12l).build());
 		}
 		
@@ -80,7 +75,7 @@ public class WarehouseStockService extends BaseService<WarehouseStock, Long, IWa
 			if(!warehouseStocks.isEmpty()) {
 				WarehouseStock warehouseStock = warehouseStocks.iterator().next();
 				Long stock = warehouseStock.getStock() - orderProduct.getQuantity();
-				orderProduct.setWarehouseId(warehouseStock.getId().getWarehouseId());
+				orderProduct.setWarehouseId(warehouseStock.getId().getBuildingId());
 				orderProduct.setState(OrderState.CONFIRMED);
 				
 				warehouseStock.setStock(stock);

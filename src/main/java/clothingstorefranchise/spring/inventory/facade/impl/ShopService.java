@@ -50,9 +50,9 @@ public class ShopService extends BaseService<Shop, Long, IShopRepository> implem
 		return mapList(shops, ShopDto.class);
 	}
 
-	public ShopDto load(Long id) {
-		Shop shop = super.loadBase(id);
-		return map(shop, ShopDto.class);
+	public ShopWithStockDto load(Long id) {
+		Shop warehouse = super.loadBase(id);
+		return map(warehouse, ShopWithStockDto.class);
 	}
 
 	public ShopDto update(ShopDto shopDto) {

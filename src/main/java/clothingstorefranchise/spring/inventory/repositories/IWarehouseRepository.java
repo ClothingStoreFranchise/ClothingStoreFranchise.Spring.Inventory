@@ -12,6 +12,6 @@ public interface IWarehouseRepository extends JpaRepository<Warehouse, Long> {
 	@Query("select distinct w from Warehouse w JOIN FETCH w.warehouseStocks t where t.id.productId = ?1")
 	List<Warehouse> findWarehousesWithProductStocksByProductId(Long productId);
 			
-	@Query("select distinct w from Warehouse w where w.id not in (select t.id.warehouseId from WarehouseStock t where t.id.productId = ?1)")
+	@Query("select distinct w from Warehouse w where w.id not in (select t.id.buildingId from WarehouseStock t where t.id.productId = ?1)")
 	List<Warehouse> findWarehousesNotMatchProductId(Long productId);
 }

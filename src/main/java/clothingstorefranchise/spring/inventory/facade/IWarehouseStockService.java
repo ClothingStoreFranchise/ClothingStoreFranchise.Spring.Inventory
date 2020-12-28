@@ -7,7 +7,6 @@ import clothingstorefranchise.spring.inventory.dtos.StockDto;
 import clothingstorefranchise.spring.inventory.dtos.events.ValidateInventoryEvent;
 
 public interface IWarehouseStockService {
-	List<StockDto> findByWarehouseId(Long id);
 	
 	List<StockDto> addProductToWarehouse(Long productId,Long warehouseId);
 	

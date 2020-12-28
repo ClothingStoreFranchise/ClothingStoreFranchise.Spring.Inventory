@@ -15,13 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import clothingstorefranchise.spring.inventory.dtos.ProductDto;
 import clothingstorefranchise.spring.inventory.dtos.ShopDto;
 import clothingstorefranchise.spring.inventory.dtos.ShopWithStockDto;
 import clothingstorefranchise.spring.inventory.facade.IShopService;
-import clothingstorefranchise.spring.inventory.facade.IShopStockService;
-import clothingstorefranchise.spring.inventory.model.Shop;
-import clothingstorefranchise.spring.inventory.repositories.IShopRepository;
 import io.swagger.annotations.Api;
 
 @RestController
@@ -43,7 +39,7 @@ public class ShopController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ShopDto> load(@PathVariable Long id) {
+	public ResponseEntity<ShopWithStockDto> load(@PathVariable Long id){
 		return ResponseEntity.ok(shopService.load(id));
 	}
 	
