@@ -1,4 +1,4 @@
-# ClothingStoreFranchise.Spring.Inventory
+# ClothingStoreFranchise: Inventory Microservice
 
 **Description**
 ----------------
