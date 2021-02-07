@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import clothingstorefranchise.spring.common.exceptions.EntityDoesNotExistException;
 import clothingstorefranchise.spring.inventory.RabbitMqConfig;
 import clothingstorefranchise.spring.inventory.definitions.consts.ClothingSizes;
 import clothingstorefranchise.spring.inventory.definitions.enums.OrderState;
@@ -30,6 +32,9 @@ public class WarehouseStockService extends BaseService<WarehouseStock, Long, IWa
 	private IProductRepository productRepository;
 	
 	@Autowired
+	private IntegrationEventLogService integrationEventService;
+	
+	@Autowired
 	private RabbitTemplate rabbitTemplate;
 	
 	@Autowired
@@ -39,7 +44,7 @@ public class WarehouseStockService extends BaseService<WarehouseStock, Long, IWa
 	
 	public List<StockDto> addProductToWarehouse(Long productId,Long warehouseId) {
 		
-		Product product = productRepository.findById(productId).get();
+		Product product = productRepository.findById(productId).orElseThrow(() -> new EntityDoesNotExistException("Product not found: "+productId));
 		int[] sizes = ClothingSizes.getClothingShizes(product.getClothingSizeType());
 		List<WarehouseStock> warehouseStocks = new ArrayList<>();
 		
@@ -63,6 +68,7 @@ public class WarehouseStockService extends BaseService<WarehouseStock, Long, IWa
 		repository.deleteStockByProductId(productId);
 	}
 	
+	@Transactional
 	public ValidateInventoryEvent validateInventory(ValidateInventoryEvent event) { 
 		List<OrderProductDto> orderProductDtos = event.getOrderProducts();
 		List<StockCountDto> updatedStocks = new ArrayList<>();
@@ -91,6 +97,7 @@ public class WarehouseStockService extends BaseService<WarehouseStock, Long, IWa
 		//update customers microservice
 		if(!updatedStocks.isEmpty()) {
 			UpdateStockEvent updateStockEvent = new UpdateStockEvent(updatedStocks);
+			integrationEventService.saveEvent(updateStockEvent);
 			rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, UpdateStockEvent.class.getSimpleName(), updateStockEvent);
 		}
 		
@@ -98,4 +105,18 @@ public class WarehouseStockService extends BaseService<WarehouseStock, Long, IWa
 		
 		return event;
  	}
+	
+	protected boolean isValid(OrderProductDto dto) {
+		return nullValidation(dto) && numericValidation(dto);
+	}
+	
+	private static boolean nullValidation(OrderProductDto dto) {
+		return dto != null
+			&& dto.getProductId() != null
+			&& dto.getWarehouseId() != null;
+	}
+	
+	private static boolean numericValidation(OrderProductDto dto) {
+		return dto.getQuantity() > 0;
+	}
 }

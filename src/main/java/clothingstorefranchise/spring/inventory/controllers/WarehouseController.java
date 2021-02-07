@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +33,7 @@ public class WarehouseController {
 	
 	@PostMapping()
 	public ResponseEntity<WarehouseDto> create(@Valid @RequestBody WarehouseDto warehouseDto){
-		return ResponseEntity.ok(warehouseService.create(warehouseDto));
+		return new ResponseEntity<>(warehouseService.create(warehouseDto), HttpStatus.CREATED);
 	}
 	
 	@GetMapping()

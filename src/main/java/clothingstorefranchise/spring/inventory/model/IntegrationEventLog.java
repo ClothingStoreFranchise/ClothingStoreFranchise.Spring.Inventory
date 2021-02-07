@@ -33,7 +33,7 @@ public class IntegrationEventLog {
 	@Type(type="uuid-char")
     private UUID eventId;
 	@NotNull
-	@Column
+	@Column(length = 710)
     private String content;
     @NotNull
     @Column

@@ -48,12 +48,22 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(jwtConfiguration.getLoginUrl(), "/**/swagger-ui.html").permitAll()
                 .antMatchers(HttpMethod.GET, "/**/swagger-resources/**", "/**/webjars/springfox-swagger-ui/**", "/**/v2/api-docs/**").permitAll()
-                //.antMatchers("/auth/user/**").hasRole(Rol.ADMIN)
-                .antMatchers("/warehouses/**").permitAll()
-                .antMatchers("/products/**/").permitAll()
+                
+                .antMatchers(HttpMethod.GET, "/warehouses/**").hasAnyRole(Rol.ADMIN, Rol.WAREHOUSE_EMPLOYEE)
+                .antMatchers(HttpMethod.POST, "/warehouses/**").hasRole(Rol.ADMIN)
+                .antMatchers(HttpMethod.PUT, "/warehouses/**").hasRole(Rol.ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/warehouses/**").hasRole(Rol.ADMIN)
+                .antMatchers("/warehouses/without_product/**").hasAnyRole(Rol.ADMIN)
+                
+                .antMatchers(HttpMethod.GET,"/shops/**").hasAnyRole(Rol.SHOP_EMPLOYEE,Rol.ADMIN)
+                .antMatchers(HttpMethod.POST,"/shops/**").hasRole(Rol.ADMIN)
+                .antMatchers(HttpMethod.PUT,"/shops/**").hasRole(Rol.ADMIN)
+                .antMatchers(HttpMethod.DELETE,"/shops/**").hasRole(Rol.ADMIN)
+                .antMatchers("/shops/without_product/**").hasAnyRole(Rol.ADMIN)
+                
                 .antMatchers("/products/**/stocks-without-warehouses").permitAll()
-                .antMatchers("/warehouse-stocks/**").permitAll()
-                .antMatchers("/shop-stocks/**").permitAll()
+                .antMatchers("/products/**").hasRole(Rol.ADMIN)
+                
                 .anyRequest().authenticated();
     }
 }

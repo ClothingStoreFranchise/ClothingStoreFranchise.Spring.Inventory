@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import clothingstorefranchise.spring.common.exceptions.EntityDoesNotExistException;
 import clothingstorefranchise.spring.common.types.IEntityDto;
 
 public abstract class BaseService
@@ -15,7 +16,7 @@ public abstract class BaseService
 	@Autowired
 	protected ModelMapper modelMapper;
 	
-	public TRepository repository;
+	protected TRepository repository;
 	
 	private final Class<TEntity> entityClass;
 	
@@ -44,9 +45,7 @@ public abstract class BaseService
 	}
 	
 	public TEntity loadBase(TId id) {
-		//error control
-		TEntity entity = repository.findById(id).get();
-		return entity;
+		return repository.findById(id).orElseThrow(() -> new EntityDoesNotExistException("Entity not found "+id));
 	}
 	
 	public List<TEntity> loadAllBase(){
