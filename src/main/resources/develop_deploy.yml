@@ -1,0 +1,45 @@
+server:
+  port: 8084
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka/
+    register-with-eureka: true
+    
+spring:
+  rabbitmq:
+    host: localhost
+    password: guest
+    username: guest
+    listener:
+      simple:
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          initial-interval: 3s
+          max-attempts: 6
+          max-interval: 10s
+          multiplier: 2
+  application:
+    name: inventory
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  jmx:
+    enabled: false
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost/inventory?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false"
+    username: root
+    password: root
+
+jwt:
+  config:
+    type: signed
